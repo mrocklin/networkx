@@ -47,9 +47,9 @@ def draw_nodes(G, pos,
     s+=     r"    \foreach \pos/\name in {"+"\n"
     for node, (x,y) in pos.items():
         s+= r"                            {(%f, %f)/%s},"%(x,y,node)+"\n"
-    s +=     "                            }\n"
+    s = s[:-2]+"}\n"
 
-    s +=    r"        \node[node] (\name) at \pos {$name$};"+"\n"
+    s +=    r"        \node[node] (\name) at \pos {$\name$};"+"\n"
 
     return s
 
@@ -70,7 +70,7 @@ def draw_edges(G, pos,
     s +=     r"    \foreach \source/ \dest /\weight in{"+"\n"
     for source, dest in G.edges():
         s += "                            %s/%s/1,\n"%(source, dest)
-    s +=     '                            }\n'
+    s = s[:-2]+"}\n"
 
     s +=     r"         \path[edge] (\source) -- node[weight] {} (\dest);"+"\n"
     return s
@@ -78,19 +78,14 @@ def draw_edges(G, pos,
 def tikz_prelude():
     return r"""
 \usepackage{tikz}
-%\PreviewEnvironment{tikzpicture}
+\usepackage{verbatim}
+\usetikzlibrary{arrows,shapes}
+
 """
 
 def full_tex_document(G, filename = None, show = True):
     s = r"""
 \documentclass{beamer}""" + tikz_prelude() + r"""
-\usepackage[active,tightpage]{preview}
-\setlength\PreviewBorder{7pt}
-
-\usepackage{verbatim}
-
-\pgfdeclarelayer{background}
-\pgfsetlayers{background,main}
 
 \begin{document}
 \begin{frame}
